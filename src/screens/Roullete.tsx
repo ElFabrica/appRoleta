@@ -43,6 +43,7 @@ const Roullete: React.FC = () => {
   const [prizes, setPrizes] = useState<Prize[]>([]);
   const [result, setResult] = useState<Prize | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isSpinning, setIsSpinning] = useState(false); // Estado para controlar se está girando
 
   const anglePerSlice = 360 / (prizes.length || 1);
 
@@ -83,7 +84,9 @@ const Roullete: React.FC = () => {
 
   // Função de rodar a roleta
   const spin = () => {
-    if (prizes.length === 0) return;
+    if (prizes.length === 0 || isSpinning) return; // Bloqueia se já estiver girando
+
+    setIsSpinning(true); // Bloqueia o botão
 
     const winnerIndex = getPrizeByProbability();
 
@@ -110,6 +113,8 @@ const Roullete: React.FC = () => {
         prize: prize.name,
         date: new Date().toISOString(),
       });
+
+      setIsSpinning(false); // Libera o botão após a animação
     });
   };
 
@@ -189,18 +194,57 @@ const Roullete: React.FC = () => {
                   </G>
                 );
               })}
-              <Circle cx={center} cy={center} r={wheelSize * 0.12} fill="#fff" />
+              {/* Círculo central visível */}
+              <Circle
+                cx={center}
+                cy={center}
+                r={wheelSize * 0.12}
+                fill={isSpinning ? '#ccc' : '#fff'}
+                stroke="#ccc"
+                strokeWidth={2}
+              />
             </G>
           </Svg>
         </Animated.View>
 
+        {/* Indicador */}
         <View
           style={tw`absolute top-[-5] w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-red-500 z-10`}
         />
+
+        {/* Botão invisível sobre o círculo central */}
+        <Pressable
+          onPress={spin}
+          disabled={isSpinning}
+          style={[
+            {
+              position: 'absolute',
+              width: wheelSize * 0.24,
+              height: wheelSize * 0.24,
+              borderRadius: (wheelSize * 0.24) / 2,
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}
+        >
+          <Text style={tw`text-gray-700 font-bold p-4`}>
+            {isSpinning ? '' : 'Girar'}
+          </Text>
+        </Pressable>
       </View>
 
-      <Pressable style={tw`bg-blue-600 px-6 py-3 rounded-lg`} onPress={spin}>
-        <Text style={tw`text-white text-lg font-bold`}>Girar Roleta</Text>
+      <Pressable
+        style={tw.style(
+          'px-6 py-3 rounded-lg',
+          isSpinning ? 'bg-gray-400' : 'bg-blue-600'
+        )}
+        onPress={spin}
+        disabled={isSpinning}
+      >
+        <Text style={tw`text-white text-lg font-bold`}>
+          {isSpinning ? 'Girando...' : 'Girar Roleta'}
+        </Text>
       </Pressable>
 
       <Modal
@@ -212,9 +256,7 @@ const Roullete: React.FC = () => {
         <View style={tw`flex-1 justify-center items-center bg-black/60`}>
           <View style={tw`bg-white p-8 rounded-2xl items-center`}>
             <Text style={tw`text-2xl font-bold mb-4`}>🎉 Parabéns!</Text>
-            <Text style={tw`text-lg mb-6`}>
-              Você ganhou: {result?.name}
-            </Text>
+            <Text style={tw`text-lg mb-6`}>Você ganhou: {result?.name}</Text>
 
             <Pressable
               style={tw`bg-green-600 px-6 py-2 rounded-lg`}
