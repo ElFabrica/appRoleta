@@ -20,11 +20,11 @@ import MaskInput from "react-native-mask-input";
 
 // Tipagem da stack e props da tela
 type RootStackParamList = {
-  Form: undefined;
+  Roullete: undefined;
   Question: undefined;
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, "Form">;
+type Props = NativeStackScreenProps<RootStackParamList, "Roullete">;
 
 const Form: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -72,7 +72,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
       setEmail("");
       setPhone("");
 
-      navigation.navigate("Question");
+      navigation.navigate("Roullete");
     } catch (error) {
       console.error("Erro ao salvar dados no banco:", error);
       Alert.alert("Erro", "Não foi possível salvar os dados.");

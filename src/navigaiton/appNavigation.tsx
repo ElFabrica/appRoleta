@@ -4,14 +4,12 @@ import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navig
 import Home from "../screens/Home";
 import Form from "../screens/Form";
 import Users from "../screens/Users"
-import Question from "../screens/Roullete"; // adicionando Question que está no seu Stack
-import { Provider as TinybaseProvider } from "tinybase/ui-react";
 import Roullete from "../screens/Roullete";
+import { Provider as TinybaseProvider } from "tinybase/ui-react";
 
 // Defina os nomes das rotas e seus parâmetros (aqui não há parâmetros para simplificar)
 export type RootStackParamList = {
   Home: undefined;
-  Question: undefined;
   Form: undefined;
   Users: undefined;
   Roullete: undefined;
@@ -32,11 +30,6 @@ function AppNavigator() {
           <Stack.Screen
             name="Roullete"
             component={Roullete}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Form"
-            component={Form}
             options={{ headerShown: false }}
           />
           <Stack.Screen
