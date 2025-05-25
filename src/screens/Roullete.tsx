@@ -12,7 +12,7 @@ import {
 import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
 
 const items = ['Prêmio A', 'Prêmio B', 'Prêmio C', 'Prêmio D', 'Prêmio E'];
-const colors = ['#f94144', '#f3722c', '#f8961e', '#43aa8b', '#577590'];
+const colors = ['#f94144', '#f3722c', '#f8961e', '#43aa8b', '#577595'];
 
 const Roullete: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
