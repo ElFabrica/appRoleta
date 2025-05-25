@@ -57,9 +57,9 @@ export default function HomeScreen() {
 
         {/* Instruções */}
         <View style={tw`bg-blue-800 p-4 rounded-lg w-95 items-center justify-center`}>
-          <Text style={tw`text-white text-lg text-justify text-center`}>Preencha um formulário rápido.</Text>
-          <Text style={tw`text-white text-lg text-justify`}>Concorra a brindes</Text>
-          <Text style={tw`text-white text-lg text-justify`}>Cada cadastro tem direiro a um giro</Text>
+          <Text style={tw`text-white text-2xl text-center`}>Concorra a brindes.</Text>
+          <Text style={tw`text-white text-2xl text-center`}>Preencha um formulário rápido.</Text>
+          <Text style={tw`text-white text-2xl text-center`}>Cada cadastro tem direiro a um giro.</Text>
         </View>
 
         <View style={tw`flex-row gap-4`}>

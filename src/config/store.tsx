@@ -4,7 +4,7 @@ import * as SQLite from 'expo-sqlite';
 
 const db: SQLite.Database = SQLite.openDatabaseSync('database.db');
 
-const TABLE_NAME = "users";
+const TABLE_NAME = "usersRoleta";
 
 const store: Store = createStore();
 store.setTable(TABLE_NAME, {}); // Inicializa a tabela na memória
