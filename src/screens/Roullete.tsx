@@ -13,19 +13,26 @@ import tw from 'twrnc';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
+// Tipagem das rotas da aplicação
 type RootStackParamList = {
   Home: undefined;
   Roullete: undefined;
-  // adicione outras rotas conforme necessário
 };
-type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
+// Tipagem específica para navegação
+type SplashScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
+// 🎁 Itens da roleta
 const items = ['Prêmio A', 'Prêmio B', 'Prêmio C', 'Prêmio D', 'Prêmio E'];
+
+// 🎨 Cores para cada segmento
 const colors = ['#f94144', '#f3722c', '#f8961e', '#43aa8b', '#577595'];
 
 const Roullete: React.FC = () => {
-  const { width } = useWindowDimensions();
+  const { width } = useWindowDimensions(); // 📐 Obtem largura da tela para dimensionar a roleta
   const wheelSize = width * 0.9;
   const radius = wheelSize / 2;
   const center = radius;
@@ -34,11 +41,16 @@ const Roullete: React.FC = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
   const [result, setResult] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+
   const rotation = useRef(new Animated.Value(0)).current;
 
+  /**
+   * 🔄 Função que executa a rotação da roleta.
+   * Calcula um giro aleatório e define o prêmio baseado na posição final.
+   */
   const spin = () => {
-    const rounds = 5;
-    const winnerIndex = Math.floor(Math.random() * items.length);
+    const rounds = 5; // 🔁 Número de voltas completas
+    const winnerIndex = Math.floor(Math.random() * items.length); // 🎯 Item sorteado
     const endRotation =
       rounds * 360 + (items.length - winnerIndex) * anglePerSlice - anglePerSlice / 2;
 
@@ -54,11 +66,16 @@ const Roullete: React.FC = () => {
     });
   };
 
+  // 🔗 Mapeia valores de rotação em graus para animação
   const rotate = rotation.interpolate({
     inputRange: [0, 360],
     outputRange: ['0deg', '360deg'],
   });
 
+  /**
+   * 📍 Converte ângulos polares para coordenadas cartesianas
+   * Usado para desenhar os arcos da roleta e posicionar os textos
+   */
   const polarToCartesian = (
     centerX: number,
     centerY: number,
@@ -72,6 +89,9 @@ const Roullete: React.FC = () => {
     };
   };
 
+  /**
+   * 🌀 Cria um segmento (fatias) da roleta baseado no índice.
+   */
   const createArc = (index: number) => {
     const startAngle = anglePerSlice * index;
     const endAngle = startAngle + anglePerSlice;
@@ -89,6 +109,9 @@ const Roullete: React.FC = () => {
     ].join(' ');
   };
 
+  /**
+   * 🏷️ Calcula a posição do texto dentro de cada segmento.
+   */
   const getTextPosition = (index: number) => {
     const angle = anglePerSlice * index + anglePerSlice / 2;
     const pos = polarToCartesian(center, center, radius * 0.65, angle);
@@ -97,7 +120,10 @@ const Roullete: React.FC = () => {
 
   return (
     <View style={tw`flex-1 justify-center items-center`}>
+        <Text style={tw`text-blue-500 font-medium text-3xl mb-5 leading-10`}>
+        Girou Ganhou</Text>
       <View style={tw`justify-center items-center mb-10`}>
+        {/* 🔄 Roleta Giratória */}
         <Animated.View style={{ transform: [{ rotate }] }}>
           <Svg width={wheelSize} height={wheelSize}>
             <G>
@@ -105,12 +131,14 @@ const Roullete: React.FC = () => {
                 const { x, y, angle } = getTextPosition(index);
                 return (
                   <G key={index}>
+                    {/* 🎨 Fatia da roleta */}
                     <Path
                       d={createArc(index)}
                       fill={colors[index % colors.length]}
                       stroke="#fff"
                       strokeWidth={2}
                     />
+                    {/* 🏷️ Texto do prêmio */}
                     <SvgText
                       x={x}
                       y={y}
@@ -126,22 +154,20 @@ const Roullete: React.FC = () => {
                   </G>
                 );
               })}
+              {/* 🔘 Círculo central */}
               <Circle cx={center} cy={center} r={wheelSize * 0.12} fill="#fff" />
             </G>
           </Svg>
         </Animated.View>
 
-        {/* 🔻 Ponteiro */}
+        {/* 🔻 Ponteiro (agora apontando para baixo) */}
         <View
-          style={tw`absolute -top-4 w-0 h-0 border-l-[15px] border-r-[15px] border-b-[30px] border-l-transparent border-r-transparent border-b-red-500 z-10`}
+          style={tw`absolute top-[-5] w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-red-500 z-10`}
         />
       </View>
 
       {/* 🎯 Botão Girar */}
-      <Pressable
-        style={tw`bg-blue-600 px-6 py-3 rounded-lg`}
-        onPress={spin}
-      >
+      <Pressable style={tw`bg-blue-600 px-6 py-3 rounded-lg`} onPress={spin}>
         <Text style={tw`text-white text-lg font-bold`}>Girar Roleta</Text>
       </Pressable>
 
@@ -159,7 +185,7 @@ const Roullete: React.FC = () => {
 
             <Pressable
               style={tw`bg-green-600 px-6 py-2 rounded-lg`}
-              onPress={() => [setModalVisible(false), navigation.navigate("Home")]}
+              onPress={() => [setModalVisible(false), navigation.navigate('Home')]}
             >
               <Text style={tw`text-white font-bold`}>Resgatar Prêmio</Text>
             </Pressable>

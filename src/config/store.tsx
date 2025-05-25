@@ -12,7 +12,7 @@ store.setTable(TABLE_NAME, {}); // Inicializa a tabela na memória
 const persister: ExpoSqlitePersister = createExpoSqlitePersister(store, db);
 
 const initializeStore = async (): Promise<void> => {
-  await persister.load();           // Carrega dados existentes
+  await persister.load();          // Carrega dados existentes
   await persister.startAutoSave(); // Ativa autosave
 };
 
