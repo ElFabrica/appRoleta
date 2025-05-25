@@ -10,6 +10,16 @@ import {
 } from 'react-native';
 import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
 import tw from 'twrnc';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
+type RootStackParamList = {
+  Home: undefined;
+  Roullete: undefined;
+  // adicione outras rotas conforme necessário
+};
+type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
 
 const items = ['Prêmio A', 'Prêmio B', 'Prêmio C', 'Prêmio D', 'Prêmio E'];
 const colors = ['#f94144', '#f3722c', '#f8961e', '#43aa8b', '#577595'];
@@ -21,6 +31,7 @@ const Roullete: React.FC = () => {
   const center = radius;
   const anglePerSlice = 360 / items.length;
 
+  const navigation = useNavigation<SplashScreenNavigationProp>();
   const [result, setResult] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const rotation = useRef(new Animated.Value(0)).current;
@@ -148,7 +159,7 @@ const Roullete: React.FC = () => {
 
             <Pressable
               style={tw`bg-green-600 px-6 py-2 rounded-lg`}
-              onPress={() => setModalVisible(false)}
+              onPress={() => [setModalVisible(false), navigation.navigate("Home")]}
             >
               <Text style={tw`text-white font-bold`}>Resgatar Prêmio</Text>
             </Pressable>

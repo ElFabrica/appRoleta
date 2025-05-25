@@ -69,7 +69,8 @@ const Users: React.FC = () => {
       id,
       name: String(user.name),
       email: String(user.email),
-      phone: String(user.phone)
+      phone: String(user.phone),
+      game: String("Roleta"),
     }));
     setUsers(response);
     // console.log('📦 Dados atuais:', data); //Mostrar dados no console
