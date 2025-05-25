@@ -1,25 +1,46 @@
-import { createStore, Store } from "tinybase";
-import { createExpoSqlitePersister, ExpoSqlitePersister } from "tinybase/persisters/persister-expo-sqlite";
+import { createStore, Store } from 'tinybase';
+import {
+  createExpoSqlitePersister,
+  ExpoSqlitePersister,
+} from 'tinybase/persisters/persister-expo-sqlite';
 import * as SQLite from 'expo-sqlite';
 
-const db: SQLite.Database = SQLite.openDatabaseSync('database.db');
+// Cria ou abre o banco de dados SQLite chamado 'database.db'
+const db = SQLite.openDatabaseSync('database.db');
 
-const TABLE_NAME = "usersRoleta";
-
+// Cria uma instância da store do TinyBase
 const store: Store = createStore();
-store.setTable(TABLE_NAME, {}); // Inicializa a tabela na memória
 
+// Define os nomes das tabelas
+const USERS_TABLE = 'usersRoleta'; // Tabela para armazenar o histórico dos giros
+const PRIZES_TABLE = 'prizes'; // Tabela que armazena os prêmios da roleta
+
+// Inicializa as tabelas vazias na store (em memória)
+store.setTable(USERS_TABLE, {});
+store.setTable(PRIZES_TABLE, {});
+
+// Cria o persister que conecta a store ao banco SQLite
 const persister: ExpoSqlitePersister = createExpoSqlitePersister(store, db);
 
-const initializeStore = async (): Promise<void> => {
-  await persister.load();          // Carrega dados existentes
-  await persister.startAutoSave(); // Ativa autosave
+// Função para inicializar a store carregando os dados e ativando o autosave
+const initializeStore = async () => {
+  await persister.load(); // Carrega dados do SQLite
+  await persister.startAutoSave(); // Salva automaticamente qualquer alteração
 };
 
-const clearTable = async (): Promise<void> => {
-  store.delTable(TABLE_NAME);       // 🔥 Remove a tabela da memória
-  await persister.save();           // Salva alteração no banco
-  await persister.load();           // Recarrega do banco (agora vazio)
+// Função auxiliar para limpar uma tabela específica
+const clearTable = async (tableName: string) => {
+  store.delTable(tableName); // Remove todos os dados da tabela
+  await persister.save(); // Salva a alteração
+  await persister.load(); // Recarrega os dados atualizados
 };
 
-export { store, TABLE_NAME, initializeStore, persister, clearTable };
+// Exporta os objetos e funções importantes
+export {
+  store,
+  USERS_TABLE,
+  PRIZES_TABLE,
+  initializeStore,
+  persister,
+  clearTable,
+};

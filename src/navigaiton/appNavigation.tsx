@@ -5,6 +5,7 @@ import Home from "../screens/Home";
 import Form from "../screens/Form";
 import Users from "../screens/Users"
 import Roullete from "../screens/Roullete";
+import admin from "../screens/admin";
 import { Provider as TinybaseProvider } from "tinybase/ui-react";
 
 // Defina os nomes das rotas e seus parâmetros (aqui não há parâmetros para simplificar)
@@ -13,6 +14,7 @@ export type RootStackParamList = {
   Form: undefined;
   Users: undefined;
   Roullete: undefined;
+  admin: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -39,6 +41,11 @@ function AppNavigator() {
           <Stack.Screen
             name="Form"
             component={Form}
+          />
+          <Stack.Screen
+            name="admin"
+            component={admin}
+            options={{ headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

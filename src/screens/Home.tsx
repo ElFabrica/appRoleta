@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, Modal, TextInput, Alert } from "react-native";
+import { View, Text, Pressable, Modal, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import tw from 'twrnc';
 import LottieView from 'lottie-react-native';
@@ -6,21 +6,25 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-// Defina os tipos das rotas da sua navegação
+// 🔗 Tipagem das rotas
 type RootStackParamList = {
   Users: undefined;
   Form: undefined;
-  // adicione outras rotas conforme necessário
+  admin: undefined
+  OutraTela: undefined; // 👉 Adicione essa rota ou ajuste conforme sua necessidade
 };
 
 type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Form'>;
 
 export default function HomeScreen() {
   const navigation = useNavigation<SplashScreenNavigationProp>();
+
+  // 🔥 Estados para controlar modal de senha e dropdown do menu
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [chave, setChave] = useState<string>('');
 
-  // Função de verificar senha e ir para o acesso restrito
+  // 🔑 Função que valida o código de acesso
   function acessoRestrito() {
     if (chave !== "Fala1234@") {
       Alert.alert("Código inválido");
@@ -28,52 +32,83 @@ export default function HomeScreen() {
       return;
     }
     setModalVisible(false);
+    setDropdownVisible(false);
     navigation.navigate("Users");
     setChave("");
   }
 
+  // 🔧 Função para outra ação (configurada para navegar para 'OutraTela')
+  function outraAcao() {
+    setDropdownVisible(false);
+    navigation.navigate("admin"); // 🔥 Substitua por sua tela desejada
+  }
+
   return (
     <View style={tw`flex-1`}>
-      {/* Logo */}
 
-      {/* Ícone */}
-      <Pressable onPress={() => setModalVisible(true)}>
-        <Icon name="gear" size={24} color="purple" style={tw`mt-4 mx-2`} />
-      </Pressable>
+      {/* ⚙️ Ícone de configurações com dropdown */}
+      <View style={tw`mt-4 mx-2`}>
+        <Pressable onPress={() => setDropdownVisible(!dropdownVisible)}>
+          <Icon name="gear" size={24} color="purple" />
+        </Pressable>
 
-      {/* Conteúdo principal */}
+        {/* 🔽 Dropdown */}
+        {dropdownVisible && (
+          <View style={tw`absolute bg-white shadow-lg rounded-md p-2 top-8 right-0 z-50`}>
+            <Pressable
+              onPress={() => {
+                setDropdownVisible(false);
+                setModalVisible(true); // 👉 Abre o modal da senha
+              }}
+              style={tw`px-4 py-2`}
+            >
+              <Text style={tw`text-base text-purple-700`}>🔑 Acesso Restrito</Text>
+            </Pressable>
+            <Pressable
+              onPress={outraAcao} // 👉 Executa outra ação
+              style={tw`px-4 py-2`}
+            >
+              <Text style={tw`text-base text-purple-700`}>🧠 Outra Ação</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
+
+      {/* 🎯 Conteúdo principal */}
       <View style={tw`flex-1 justify-center items-center`}>
-        <Text style={tw`text-blue-500 font-medium text-5xl mb-5 leading-10`}>
+        <Text style={tw`text-blue-500 font-medium text-5xl mb-5 leading-10 text-center`}>
           Bem-vindo ao{"\n"}Girou Ganhou!
         </Text>
-        {/* Animação */}
+
+        {/* 🎥 Animação */}
         <LottieView
           source={require('../animations/Roullete.json')}
           autoPlay
           loop
           style={tw`w-5/6 h-1/3`}
         />
-        <Text style={tw`text-blue-500 font-bold text-3xl text-center mb-5`}>Instruções</Text>
 
-        {/* Instruções */}
+        <Text style={tw`text-blue-500 font-bold text-3xl text-center mb-5`}>
+          Instruções
+        </Text>
+
+        {/* ℹ️ Bloco de instruções */}
         <View style={tw`bg-blue-800 p-4 rounded-lg w-95 items-center justify-center`}>
           <Text style={tw`text-white text-2xl text-center`}>Concorra a brindes.</Text>
           <Text style={tw`text-white text-2xl text-center`}>Preencha um formulário rápido.</Text>
-          <Text style={tw`text-white text-2xl text-center`}>Cada cadastro tem direiro a um giro.</Text>
+          <Text style={tw`text-white text-2xl text-center`}>Cada cadastro tem direito a um giro.</Text>
         </View>
 
-        <View style={tw`flex-row gap-4`}>
-          {/* Botão de iniciar */}
-          <Pressable
-            style={tw`bg-blue-800 mt-10 p-6 py-1 rounded py-3`}
-            onPress={() => navigation.navigate("Form")}
-          >
-            <Text style={tw`text-white font-bold text-3xl`}>Iniciar</Text>
-          </Pressable>
-        </View>
+        {/* 🚀 Botão de iniciar */}
+        <Pressable
+          style={tw`bg-blue-800 mt-10 px-10 py-3 rounded`}
+          onPress={() => navigation.navigate("Form")}
+        >
+          <Text style={tw`text-white font-bold text-3xl`}>Iniciar</Text>
+        </Pressable>
       </View>
 
-      {/* Modal / Popup */}
+      {/* 🔒 Modal de acesso restrito */}
       <Modal
         animationType="fade"
         transparent={true}

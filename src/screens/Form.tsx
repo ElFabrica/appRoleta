@@ -15,7 +15,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import validator from "email-validator";
 import tw from "twrnc";
 import LottieView from "lottie-react-native";
-import { store, TABLE_NAME, initializeStore } from "../config/store";
+import { store, USERS_TABLE, initializeStore } from "../config/store";
 import MaskInput from "react-native-mask-input";
 
 // Tipagem da stack e props da tela
@@ -65,7 +65,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
 
     const id = Math.random().toString(30).substring(2, 20);
     try {
-      store.setRow(TABLE_NAME, id, { name, email, phone });
+      store.setRow(USERS_TABLE, id, { name, email, phone });
       console.log("Usuário adicionado com sucesso");
 
       setName("");

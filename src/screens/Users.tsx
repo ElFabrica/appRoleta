@@ -1,7 +1,7 @@
 import { View, Text, Pressable, Alert, TextInput, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
-import { store, TABLE_NAME, initializeStore, clearTable } from "../config/store";
+import { store, USERS_TABLE, initializeStore, clearTable } from "../config/store";
 
 
 interface User {
@@ -21,7 +21,7 @@ const Users: React.FC = () => {
 
   const handleClear = async (): Promise<void> => {
     try {
-      await clearTable();
+      await clearTable(USERS_TABLE);
       get(); // Atualiza a lista
       Alert.alert("Sucesso", "Todos os dados foram apagados.");
     } catch (error) {
@@ -64,7 +64,7 @@ const Users: React.FC = () => {
   };
 
   const get = (): void => {
-    const data = store.getTable(TABLE_NAME);
+    const data = store.getTable(USERS_TABLE);
     const response: User[] = Object.entries(data).map(([id, user]) => ({
       id,
       name: String(user.name),
