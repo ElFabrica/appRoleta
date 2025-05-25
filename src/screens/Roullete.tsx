@@ -2,19 +2,25 @@ import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
-  Button,
+  Pressable,
   Animated,
-  StyleSheet,
   Easing,
   Modal,
-  Pressable,
+  useWindowDimensions,
 } from 'react-native';
 import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
+import tw from 'twrnc';
 
 const items = ['Prêmio A', 'Prêmio B', 'Prêmio C', 'Prêmio D', 'Prêmio E'];
 const colors = ['#f94144', '#f3722c', '#f8961e', '#43aa8b', '#577595'];
 
 const Roullete: React.FC = () => {
+  const { width } = useWindowDimensions();
+  const wheelSize = width * 0.9;
+  const radius = wheelSize / 2;
+  const center = radius;
+  const anglePerSlice = 360 / items.length;
+
   const [result, setResult] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const rotation = useRef(new Animated.Value(0)).current;
@@ -22,7 +28,6 @@ const Roullete: React.FC = () => {
   const spin = () => {
     const rounds = 5;
     const winnerIndex = Math.floor(Math.random() * items.length);
-    const anglePerSlice = 360 / items.length;
     const endRotation =
       rounds * 360 + (items.length - winnerIndex) * anglePerSlice - anglePerSlice / 2;
 
@@ -43,9 +48,18 @@ const Roullete: React.FC = () => {
     outputRange: ['0deg', '360deg'],
   });
 
-  const radius = 150;
-  const center = radius;
-  const anglePerSlice = 360 / items.length;
+  const polarToCartesian = (
+    centerX: number,
+    centerY: number,
+    r: number,
+    angleInDegrees: number
+  ) => {
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+    return {
+      x: centerX + r * Math.cos(angleInRadians),
+      y: centerY + r * Math.sin(angleInRadians),
+    };
+  };
 
   const createArc = (index: number) => {
     const startAngle = anglePerSlice * index;
@@ -56,28 +70,12 @@ const Roullete: React.FC = () => {
 
     const largeArcFlag = anglePerSlice > 180 ? 1 : 0;
 
-    const pathData = [
+    return [
       `M ${center} ${center}`,
       `L ${start.x} ${start.y}`,
       `A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
       'Z',
     ].join(' ');
-
-    return pathData;
-  };
-
-  const polarToCartesian = (
-    centerX: number,
-    centerY: number,
-    r: number,
-    angleInDegrees: number
-  ) => {
-    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
-
-    return {
-      x: centerX + r * Math.cos(angleInRadians),
-      y: centerY + r * Math.sin(angleInRadians),
-    };
   };
 
   const getTextPosition = (index: number) => {
@@ -87,10 +85,10 @@ const Roullete: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.wheelContainer}>
+    <View style={tw`flex-1 justify-center items-center`}>
+      <View style={tw`justify-center items-center mb-10`}>
         <Animated.View style={{ transform: [{ rotate }] }}>
-          <Svg width={radius * 2} height={radius * 2}>
+          <Svg width={wheelSize} height={wheelSize}>
             <G>
               {items.map((item, index) => {
                 const { x, y, angle } = getTextPosition(index);
@@ -106,7 +104,7 @@ const Roullete: React.FC = () => {
                       x={x}
                       y={y}
                       fill="#fff"
-                      fontSize="16"
+                      fontSize={16}
                       fontWeight="bold"
                       textAnchor="middle"
                       alignmentBaseline="middle"
@@ -117,16 +115,24 @@ const Roullete: React.FC = () => {
                   </G>
                 );
               })}
-              <Circle cx={center} cy={center} r={40} fill="#fff" />
+              <Circle cx={center} cy={center} r={wheelSize * 0.12} fill="#fff" />
             </G>
           </Svg>
         </Animated.View>
 
-        {/* 🔻 Ponteiro apontando para baixo */}
-        <View style={styles.pointer} />
+        {/* 🔻 Ponteiro */}
+        <View
+          style={tw`absolute -top-4 w-0 h-0 border-l-[15px] border-r-[15px] border-b-[30px] border-l-transparent border-r-transparent border-b-red-500 z-10`}
+        />
       </View>
 
-      <Button title="Girar Roleta" onPress={spin} />
+      {/* 🎯 Botão Girar */}
+      <Pressable
+        style={tw`bg-blue-600 px-6 py-3 rounded-lg`}
+        onPress={spin}
+      >
+        <Text style={tw`text-white text-lg font-bold`}>Girar Roleta</Text>
+      </Pressable>
 
       {/* 🎉 Modal de Resultado */}
       <Modal
@@ -135,16 +141,16 @@ const Roullete: React.FC = () => {
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>🎉 Parabéns! 🎉</Text>
-            <Text style={styles.modalText}>Você ganhou: {result}</Text>
+        <View style={tw`flex-1 justify-center items-center bg-black/60`}>
+          <View style={tw`bg-white p-8 rounded-2xl items-center`}>
+            <Text style={tw`text-2xl font-bold mb-4`}>🎉 Parabéns!</Text>
+            <Text style={tw`text-lg mb-6`}>Você ganhou: {result}</Text>
 
             <Pressable
-              style={styles.modalButton}
+              style={tw`bg-green-600 px-6 py-2 rounded-lg`}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.modalButtonText}>Resgatar Prêmio</Text>
+              <Text style={tw`text-white font-bold`}>Resgatar Prêmio</Text>
             </Pressable>
           </View>
         </View>
@@ -152,72 +158,5 @@ const Roullete: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  wheelContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  // 🔻 Ponteiro invertido (agora para baixo)
-  pointer: {
-    position: 'absolute',
-    top: -10,
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 15,
-    borderRightWidth: 15,
-    borderTopWidth: 30,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: 'red',
-    zIndex: 10,
-  },
-  result: {
-    marginTop: 20,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  // 🎉 Modal
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 30,
-    borderRadius: 20,
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 25,
-  },
-  modalButton: {
-    backgroundColor: '#43aa8b',
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default Roullete;

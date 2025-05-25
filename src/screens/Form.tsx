@@ -20,11 +20,11 @@ import MaskInput from "react-native-mask-input";
 
 // Tipagem da stack e props da tela
 type RootStackParamList = {
+  Form: undefined;
   Roullete: undefined;
-  Question: undefined;
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, "Roullete">;
+type Props = NativeStackScreenProps<RootStackParamList, "Form">;
 
 const Form: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");

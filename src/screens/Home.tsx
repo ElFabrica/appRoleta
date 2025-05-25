@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert } from "react-native";
+import { View, Text, Pressable, Image, Modal, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
 import tw from 'twrnc';
 import LottieView from 'lottie-react-native';
@@ -8,13 +8,12 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 // Defina os tipos das rotas da sua navegação
 type RootStackParamList = {
-  Splash: undefined;
   Users: undefined;
-  Formulário: undefined;
+  Form: undefined;
   // adicione outras rotas conforme necessário
 };
 
-type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Splash'>;
+type SplashScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Form'>;
 
 export default function HomeScreen() {
   const navigation = useNavigation<SplashScreenNavigationProp>();
@@ -67,7 +66,7 @@ export default function HomeScreen() {
           {/* Botão de iniciar */}
           <Pressable
             style={tw`bg-blue-800 mt-10 p-6 py-1 rounded py-3`}
-            onPress={() => navigation.navigate("Formulário")}
+            onPress={() => navigation.navigate("Form")}
           >
             <Text style={tw`text-white font-bold text-3xl`}>Iniciar</Text>
           </Pressable>
@@ -118,5 +117,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

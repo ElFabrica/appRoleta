@@ -36,6 +36,10 @@ function AppNavigator() {
             name="Users"
             component={Users}
           />
+          <Stack.Screen
+            name="Form"
+            component={Form}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </TinybaseProvider>
