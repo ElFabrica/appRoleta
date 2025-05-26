@@ -3,36 +3,39 @@ import { View, Text, TextInput, Pressable, FlatList } from 'react-native';
 import tw from 'twrnc';
 import { store, PRIZES_TABLE } from '../config/store';
 
+// 🎯 Interface para o prêmio
+interface Prize {
+  name: string;
+  color: string;
+  probability: number;
+}
+
 const Admin = () => {
-  // 🔥 Estados dos inputs do formulário
   const [name, setName] = useState('');
   const [color, setColor] = useState('#f94144');
   const [probability, setProbability] = useState('20');
 
-  // 🔥 Estado que armazena os prêmios cadastrados no banco
-  const [prizes, setPrizes] = useState<any[]>([]);
+  const [prizes, setPrizes] = useState<[string, Prize][]>([]);
 
-  // 🚀 Hook que carrega os dados ao abrir e escuta alterações na tabela
- useEffect(() => {
-  const loadPrizes = () => {
-    const data = Object.entries(store.getTable(PRIZES_TABLE));
-    setPrizes(data);
-  };
+  // 🚀 Carrega os prêmios e escuta alterações
+  useEffect(() => {
+    const loadPrizes = async () => {
+      const table = store.getTable(PRIZES_TABLE) as unknown as Record<string, Prize>;
+      const data = Object.entries(table);
+      setPrizes(data);
+      console.log('Prêmios carregados:', data);
+    };
 
-  loadPrizes();
+    loadPrizes();
 
-  // Adiciona o listener e guarda o ID
-  const listenerId = store.addTableListener(PRIZES_TABLE, loadPrizes);
+    const listenerId = store.addTableListener(PRIZES_TABLE, loadPrizes);
 
-  // Remove o listener na desmontagem
-  return () => {
-    store.delListener(listenerId);
-  };
-}, []);
+    return () => {
+      store.delListener(listenerId);
+    };
+  }, []);
 
-
-
-  // ➕ Função para adicionar um prêmio novo
+  // ➕ Adiciona um prêmio novo
   const addPrize = () => {
     store.addRow(PRIZES_TABLE, {
       name,
@@ -40,13 +43,12 @@ const Admin = () => {
       probability: parseInt(probability),
     });
 
-    // 🔄 Reseta os campos após adicionar
     setName('');
     setColor('#f94144');
     setProbability('20');
   };
 
-  // ❌ Função para deletar um prêmio específico
+  // ❌ Deleta um prêmio
   const deletePrize = (rowId: string) => {
     store.delRow(PRIZES_TABLE, rowId);
   };
@@ -57,7 +59,7 @@ const Admin = () => {
         🎯 Gerenciar Prêmios
       </Text>
 
-      {/* 📝 Formulário de cadastro */}
+      {/* Formulário */}
       <TextInput
         placeholder="Nome do prêmio"
         value={name}
@@ -87,7 +89,7 @@ const Admin = () => {
         </Text>
       </Pressable>
 
-      {/* 📃 Lista dos prêmios existentes */}
+      {/* Lista de Prêmios */}
       <FlatList
         data={prizes}
         keyExtractor={([id]) => id}

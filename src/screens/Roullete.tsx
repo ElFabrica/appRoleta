@@ -59,6 +59,7 @@ const Roullete: React.FC = () => {
         })
       );
       setPrizes(data);
+      console.log(data)
     };
 
     load();

@@ -68,7 +68,7 @@ export default function HomeScreen() {
               onPress={outraAcao} // 👉 Executa outra ação
               style={tw`px-4 py-2`}
             >
-              <Text style={tw`text-base text-purple-700`}>🧠 Outra Ação</Text>
+              <Text style={tw`text-base text-purple-700`}>🧠 Prêmios</Text>
             </Pressable>
           </View>
         )}
