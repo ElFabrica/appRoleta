@@ -15,7 +15,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import validator from "email-validator";
 import tw from "twrnc";
 import LottieView from "lottie-react-native";
-import { store, USERS_TABLE, initializeStore } from "../config/store";
+import { store, USERS_TABLE } from "../config/store"
 import MaskInput from "react-native-mask-input";
 
 // Tipagem da stack e props da tela
@@ -30,22 +30,8 @@ const Form: React.FC<Props> = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        console.log("Inicializando store...");
-        await initializeStore();
-        console.log("Store pronto!");
-        setLoaded(true);
-      } catch (e) {
-        console.error("Erro ao inicializar banco:", e);
-        Alert.alert("Erro", "Não foi possível carregar o banco de dados.");
-      }
-    };
-    loadData();
-  }, []);
 
   const onSubmit = () => {
     if (!loaded) {
