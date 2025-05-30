@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Modal, TextInput, Alert } from "react-native";
+import { View, Text, Pressable, Modal, TextInput, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import tw from 'twrnc';
 import LottieView from 'lottie-react-native';
@@ -46,37 +46,39 @@ export default function HomeScreen() {
   return (
     <View style={tw`flex-1`}>
 
-      {/* ⚙️ Ícone de configurações com dropdown */}
-      <View style={tw`mt-4 mx-2`}>
-        <Pressable onPress={() => setDropdownVisible(!dropdownVisible)}>
-          <Icon name="gear" size={24} color="purple" />
-        </Pressable>
+      <View style={tw`mt-4 mx-2 flex-row justify-between items-start w-auto`}>
 
-        {/* 🔽 Dropdown */}
-        {dropdownVisible && (
-          <View style={tw`absolute bg-white shadow-lg rounded-md p-2 top-8 right-0 z-50`}>
-            <Pressable
-              onPress={() => {
-                setDropdownVisible(false);
-                setModalVisible(true); // 👉 Abre o modal da senha
-              }}
-              style={tw`px-4 py-2`}
-            >
-              <Text style={tw`text-base text-purple-700`}>🔑 Acesso Restrito</Text>
-            </Pressable>
-            <Pressable
-              onPress={outraAcao} // 👉 Executa outra ação
-              style={tw`px-4 py-2`}
-            >
-              <Text style={tw`text-base text-purple-700`}>🧠 Prêmios</Text>
-            </Pressable>
-          </View>
-        )}
+        <View style={tw`relative`}>
+          <Pressable onPress={() => setDropdownVisible(!dropdownVisible)}>
+            <Icon name="gear" size={24} color="purple" />
+          </Pressable>
+          {dropdownVisible && (
+            <View style={tw`absolute bg-white shadow-lg w-50 rounded-md p-2 top-8 left-5 z-50`}>
+              <Pressable
+                onPress={() => {
+                  setDropdownVisible(false);
+                  setModalVisible(true); // 👉 Abre o modal da senha
+                }}
+                style={tw`px-4 py-2`}
+              >
+                <Text style={tw`text-base text-purple-700`}>🔑 Acesso Restrito</Text>
+              </Pressable>
+              <Pressable
+                onPress={outraAcao} // 👉 Executa outra ação
+                style={tw`px-4 py-2`}
+              >
+                <Text style={tw`text-base text-purple-700`}>🧠 Prêmios</Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+        {/* Imagem - que ficará na outra ponta devido ao 'justify-between' */}
+        <Image style={tw`w-32 h-20 rounded-xl`} source={require("./assets/P-A-B.png")}/>
       </View>
 
       {/* 🎯 Conteúdo principal */}
       <View style={tw`flex-1 justify-center items-center`}>
-        <Text style={tw`text-blue-500 font-medium text-5xl mb-5 leading-10 text-center`}>
+        <Text style={tw`text-cyan-500 font-bold text-5xl mb-5 leading-10 text-center`}>
           Bem-vindo ao{"\n"}Girou Ganhou!
         </Text>
 
@@ -88,12 +90,12 @@ export default function HomeScreen() {
           style={tw`w-5/6 h-1/3`}
         />
 
-        <Text style={tw`text-blue-500 font-bold text-3xl text-center mb-5`}>
+        <Text style={tw`text-cyan-500 font-bold text-3xl text-center mb-5`}>
           Instruções
         </Text>
 
         {/* ℹ️ Bloco de instruções */}
-        <View style={tw`bg-blue-800 p-4 rounded-lg w-95 items-center justify-center`}>
+        <View style={tw`bg-cyan-500 p-4 rounded-xl w-95 items-center justify-center`}>
           <Text style={tw`text-white text-2xl text-center`}>Concorra a brindes.</Text>
           <Text style={tw`text-white text-2xl text-center`}>Preencha um formulário rápido.</Text>
           <Text style={tw`text-white text-2xl text-center`}>Cada cadastro tem direito a um giro.</Text>

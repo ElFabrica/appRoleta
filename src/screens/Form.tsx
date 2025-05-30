@@ -85,7 +85,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           </View>
 
           <Text
-            style={tw`text-blue-500 font-medium text-4xl font-bold text-center`}
+            style={tw`text-cyan-500 font-bold text-4xl  text-center`}
           >
             Cadastro
           </Text>
@@ -94,7 +94,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Nome</Text>
             <TextInput
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
+              style={tw`p-4 border-2 border-cyan-400 w-full rounded-md`}
               placeholder="John"
               value={name}
               onChangeText={setName}
@@ -105,7 +105,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Email</Text>
             <TextInput
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
+              style={tw`p-4 border-2 border-cyan-400 w-full rounded-md`}
               placeholder="seu@email.com"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -139,7 +139,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
               ]}
               keyboardType="numeric"
               placeholder="(00) 00000-0000"
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
+              style={tw`p-4 border-2 border-cyan-400 w-full rounded-md`}
             />
           </View>
 

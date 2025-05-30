@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Pressable,
+  Image,
   Animated,
   Easing,
   Modal,
@@ -162,7 +163,10 @@ const Roullete: React.FC = () => {
 
   return (
     <View style={tw`flex-1 justify-center items-center`}>
-      <Text style={tw`text-blue-500 font-medium text-3xl mb-5 leading-10`}>
+      <View style={tw`absolute top-5 right-3`}>
+      <Image style={tw`w-32 h-20  rounded-xl`} source={require("./assets/P-A-B.png")}/>
+      </View>
+      <Text style={tw`text-cyan-500 font-bold text-5xl mb-16 leading-10`}>
         Girou Ganhou
       </Text>
 
@@ -260,7 +264,7 @@ const Roullete: React.FC = () => {
             <Text style={tw`text-lg mb-6`}>Você ganhou: {result?.name}</Text>
 
             <Pressable
-              style={tw`bg-green-600 px-6 py-2 rounded-lg`}
+              style={tw`bg-cyan-500 px-6 py-2 rounded-lg`}
               onPress={() => [
                 setModalVisible(false),
                 navigation.navigate('Home'),
