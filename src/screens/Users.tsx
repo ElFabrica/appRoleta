@@ -2,6 +2,7 @@ import { View, Text, Pressable, Alert, TextInput, Modal,FlatList, ScrollView } f
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
 import { store, USERS_TABLE, initializeStore, clearTable } from "../config/store";
+import { Input } from '../components/input/Input';
 
 
 interface User {
@@ -9,6 +10,7 @@ interface User {
   name: string;
   email: string;
   phone: string;
+  nota:string
 }
 
 const Users: React.FC = () => {
@@ -16,6 +18,7 @@ const Users: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const [nota, setNota] = useState("")
 
   const CORRECT_KEY = "Fala1234@";
 
@@ -61,6 +64,7 @@ const Users: React.FC = () => {
       await UpdateItems(item);
     }
     Alert.alert("Dados enviados com sucesso!");
+    setNota("")
   };
 
   const get = (): void => {
@@ -71,6 +75,7 @@ const Users: React.FC = () => {
       email: String(user.email),
       phone: String(user.phone),
       game: String("Roleta"),
+      nota: String(nota)
     }));
     setUsers(response);
     // console.log('📦 Dados atuais:', data); //Mostrar dados no console
@@ -87,7 +92,7 @@ const Users: React.FC = () => {
       }
     };
     loadData();
-  }, []);
+  }, [nota]);
 
   return (
     <ScrollView scrollEnabled={true} >
@@ -186,13 +191,19 @@ const Users: React.FC = () => {
         onRequestClose={() => setUploadModalVisible(false)}
       >
         <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-          <View style={tw`bg-white p-6 rounded-lg w-80`}>
+          <View style={{backgroundColor:"#FFFFFF", borderRadius:16, padding:24, gap:8, width:350}}>
             <Text style={tw`text-lg font-bold mb-4`}>
+              
               Deseja realmente enviar os dados?
             </Text>
             <Text style={tw`mb-4`}>
               Isso irá enviar todos os inscritos para o servidor.
             </Text>
+            <Input place='Digite uma nota'
+              value={nota}
+              onChangeText={(value)=> setNota(value)
+              }
+              />
             <View style={tw`flex-row justify-between`}>
               <Pressable
                 style={tw`bg-gray-400 px-4 py-2 rounded-md`}

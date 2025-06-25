@@ -48,7 +48,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={tw`flex-1`}>
+    <View style={styles.container}>
       
       {/* ⚙️ Ícone de configurações com dropdown */}
       <View style={[styles.subContainer, {marginTop: 16, marginLeft: 16}]}>
@@ -80,7 +80,7 @@ export default function HomeScreen() {
       <Image style={styles.imagem} source={require("../../assets/Logo_Paslimina.png")}/>
 
       {/* 🎯 Conteúdo principal */}
-      <View style={tw`flex-1 justify-center items-center`}>
+      <View style={tw` items-center`}>
         <Text style={styles.Title}>
           Bem-vindo ao{"\n"}Girou Ganhou!
         </Text>
@@ -93,7 +93,7 @@ export default function HomeScreen() {
           style={tw`w-5/6 h-1/3`}
         />
 
-        <Text style={styles.subTitile}>
+        <Text style={[styles.subTitile, {marginBottom:16}]}>
           Instruções
         </Text>
 
@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
         {/* 🚀 Botão de iniciar */}
 
-        <Button title="Iniciar" size={24} onPress={() => navigation.navigate("Form")} />
+        <Button title="Iniciar" size={20} onPress={() => navigation.navigate("Form")} />
       </View>
 
       {/* 🔒 Modal de acesso restrito */}

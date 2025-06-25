@@ -1,7 +1,12 @@
 import { StyleSheet } from "react-native";
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 
 export const styles = StyleSheet.create({
+    container:{
+        flex: 1
+    },
+
     subContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -19,17 +24,17 @@ export const styles = StyleSheet.create({
 
     },
     Title: {
-        fontSize: 44,
+        fontSize: RFValue(36),
         fontWeight: 700,
         color: "#ab5500"
     },
     subTitile: {
-        fontSize: 30,
+        fontSize: RFValue(26),
         fontWeight: 800,
         color: "#de8228"
     },
         textInstructions: {
-        fontSize: 24,
+        fontSize: RFValue(18),
         fontWeight: 600,
         color: "#FFFFFF",
         textAlign:"center"

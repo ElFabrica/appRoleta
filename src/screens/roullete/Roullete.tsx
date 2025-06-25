@@ -237,6 +237,7 @@ function Roullete() {
 
       <View style={styles.subContainer}>
         <Button
+        size={24}
           title={isSpinning ? 'Girando...' : 'Girar Roleta'}
           onPress={spin}
           disabled={isSpinning}

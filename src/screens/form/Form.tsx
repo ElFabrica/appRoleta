@@ -98,7 +98,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
 
           {/* NOME */}
           <View style={tw`w-full mb-4`}>
-            <Text style={tw`text-lg font-bold`}>Nome</Text>
+            <Text style={styles.subTitile}>Nome</Text>
             <Input place="John"
               value={name}
               onChangeText={setName}
@@ -107,7 +107,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
 
           {/* EMAIL 
           <View style={tw`w-full mb-4`}>
-            <Text style={tw`text-lg font-bold`}>Email</Text>
+            <Text style={styles.subTitile}>Email</Text>
             <Input place="seu@email.com"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -117,7 +117,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
 */}
           {/* TELEFONE */}
           <View style={tw`w-full mb-4`}>
-            <Text style={tw`text-lg font-bold`}>Telefone</Text>
+            <Text style={styles.subTitile}>Telefone</Text>
             <MaskInput
               value={phone}
               onChangeText={setPhone}
@@ -157,7 +157,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           {/* BOTÃO */}
           <View style={styles.containerButton}>
           <Button title="Começar" 
-          size={24} 
+          size={20} 
           onPress={onSubmit}
           disabled={!loaded} />
             </View>
