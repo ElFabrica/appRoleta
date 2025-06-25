@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,8 +15,12 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import validator from "email-validator";
 import tw from "twrnc";
 import LottieView from "lottie-react-native";
-import { store, USERS_TABLE } from "../config/store"
+import { store, USERS_TABLE } from "../../config/store"
 import MaskInput from "react-native-mask-input";
+
+import { Button } from "../../components/buttom/Buttom";
+import { Input } from "../../components/input/Input";
+import { styles } from "./style";
 
 // Tipagem da stack e props da tela
 type RootStackParamList = {
@@ -38,6 +42,8 @@ const Form: React.FC<Props> = ({ navigation }) => {
       Alert.alert("Aguarde", "O banco de dados ainda está carregando...");
       return;
     }
+
+    console.log(name, email, phone)
 
     if (!name || !email || !phone) {
       Alert.alert("Erro", "Preencha todos os dados");
@@ -77,7 +83,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
         >
           <View style={tw`items-center mt-4`}>
             <LottieView
-              source={require("../animations/Form.json")}
+              source={require("../../animations/Form.json")}
               autoPlay
               loop
               style={tw`w-1/2 h-40`}
@@ -85,7 +91,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           </View>
 
           <Text
-            style={tw`text-blue-500 font-medium text-4xl font-bold text-center`}
+            style={styles.Title}
           >
             Cadastro
           </Text>
@@ -93,9 +99,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           {/* NOME */}
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Nome</Text>
-            <TextInput
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
-              placeholder="John"
+            <Input place="John"
               value={name}
               onChangeText={setName}
             />
@@ -104,14 +108,11 @@ const Form: React.FC<Props> = ({ navigation }) => {
           {/* EMAIL */}
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Email</Text>
-            <TextInput
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
-              placeholder="seu@email.com"
+            <Input place="seu@email.com"
               keyboardType="email-address"
               autoCapitalize="none"
               value={email}
-              onChangeText={setEmail}
-            />
+              onChangeText={setEmail} />
           </View>
 
           {/* TELEFONE */}
@@ -139,23 +140,27 @@ const Form: React.FC<Props> = ({ navigation }) => {
               ]}
               keyboardType="numeric"
               placeholder="(00) 00000-0000"
-              style={tw`p-4 border-2 border-blue-500 w-full rounded-md`}
+              style={{
+                color: "#333333",
+                fontSize: 14,
+                fontWeight: 600,
+                borderWidth: 1,
+                borderRadius: 20,
+                padding: 10,
+                width: "100%",
+                height: 55,
+                borderColor: "##D88200"
+              }}
             />
           </View>
 
           {/* BOTÃO */}
-          <Pressable
-            style={[
-              tw`p-4 rounded-md mt-6 w-full justify-center items-center`,
-              loaded ? tw`bg-blue-800` : tw`bg-gray-400`,
-            ]}
-            onPress={onSubmit}
-            disabled={!loaded}
-          >
-            <Text style={tw`text-white font-bold`}>
-              {loaded ? "Começar" : "Carregando..."}
-            </Text>
-          </Pressable>
+          <View style={styles.containerButton}>
+          <Button title="Começar" 
+          size={14} 
+          onPress={onSubmit}
+          disabled={!loaded} />
+            </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

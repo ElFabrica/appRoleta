@@ -7,12 +7,20 @@ import {
   Easing,
   Modal,
   useWindowDimensions,
+  Image
 } from 'react-native';
+import tw from 'twrnc';
 import Svg, { G, Path, Circle, Text as SvgText } from 'react-native-svg';
+import ConfettiCannon from 'react-native-confetti-cannon';
+
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import tw from 'twrnc';
-import { store, PRIZES_TABLE, USERS_TABLE } from '../config/store';
+import { store, PRIZES_TABLE, USERS_TABLE } from '../../config/store';
+import { updateRow } from '../../config/store'
+
+import { styles } from './style';
+import { Confetes } from '../../components/confetes';
+import { Button } from '../../components/buttom/Buttom';
 
 // Tipagem da navegação
 type RootStackParamList = {
@@ -27,10 +35,12 @@ interface Prize {
   id: string;
   name: string;
   color: string;
-  probability: number; // Percentual ou peso
+  probability: number;
+  quant: number;
+  isPrize: boolean
 }
 
-const Roullete: React.FC = () => {
+function Roullete() {
   const { width } = useWindowDimensions();
   const navigation = useNavigation<NavigationProp>();
 
@@ -43,23 +53,27 @@ const Roullete: React.FC = () => {
   const [prizes, setPrizes] = useState<Prize[]>([]);
   const [result, setResult] = useState<Prize | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSpinning, setIsSpinning] = useState(false); // Estado para controlar se está girando
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
 
   const anglePerSlice = 360 / (prizes.length || 1);
 
-  // Carregamento dos prêmios
   useEffect(() => {
     const load = () => {
-      const data = Object.entries(store.getTable(PRIZES_TABLE)).map(
-        ([key, value]: [string, any]) => ({
+      const data = Object.entries(store.getTable(PRIZES_TABLE))
+        .map(([key, value]: [string, any]) => ({
           id: key,
           name: value.name,
           color: value.color,
-          probability: value.probability ?? 1, // Default 1 se não houver
-        })
-      );
+          probability: value.probability ?? 1,
+          quant: value.quant,
+          isPrize: value.isPrize
+        }))
+        .filter((prize) => prize.quant > 0); // ⚠️ Filtra prêmios esgotados
+
       setPrizes(data);
-      console.log(data)
+      console.log('Prêmios carregados:', data);
     };
 
     load();
@@ -69,7 +83,6 @@ const Roullete: React.FC = () => {
     };
   }, []);
 
-  // Função para escolher prêmio baseado na probabilidade
   const getPrizeByProbability = (): number => {
     const total = prizes.reduce((sum, p) => sum + p.probability, 0);
     const rand = Math.random() * total;
@@ -80,18 +93,17 @@ const Roullete: React.FC = () => {
       if (rand <= acc) return i;
     }
 
-    return prizes.length - 1; // fallback de segurança
+    return prizes.length - 1;
   };
 
-  // Função de rodar a roleta
   const spin = () => {
-    if (prizes.length === 0 || isSpinning) return; // Bloqueia se já estiver girando
+    if (prizes.length === 0 || isSpinning) return;
 
-    setIsSpinning(true); // Bloqueia o botão
+    setIsSpinning(true);
 
     const winnerIndex = getPrizeByProbability();
 
-    const rounds = 5; // Voltas completas
+    const rounds = 5;
     const endRotation =
       rounds * 360 +
       (prizes.length - winnerIndex) * anglePerSlice -
@@ -108,6 +120,11 @@ const Roullete: React.FC = () => {
       setModalVisible(true);
       rotation.setValue(endRotation % 360);
 
+      if (prize.isPrize) {
+        setShowConfetti(true);
+      }
+
+
       store.addRow(USERS_TABLE, {
         userId: Date.now().toString(),
         userName: 'Usuário Teste',
@@ -115,7 +132,13 @@ const Roullete: React.FC = () => {
         date: new Date().toISOString(),
       });
 
-      setIsSpinning(false); // Libera o botão após a animação
+      if (prize.quant > 0) {
+        updateRow(PRIZES_TABLE, prize.id, {
+          quant: prize.quant - 1,
+        });
+      }
+
+      setIsSpinning(false);
     });
   };
 
@@ -161,8 +184,10 @@ const Roullete: React.FC = () => {
   };
 
   return (
-    <View style={tw`flex-1 justify-center items-center`}>
-      <Text style={tw`text-blue-500 font-medium text-3xl mb-5 leading-10`}>
+
+    <View style={styles.Container}>
+      <Image style={styles.imagem} source={require("../../assets/Logo_Paslimina.png")} />
+      <Text style={styles.Title}>
         Girou Ganhou
       </Text>
 
@@ -195,7 +220,6 @@ const Roullete: React.FC = () => {
                   </G>
                 );
               })}
-              {/* Círculo central visível */}
               <Circle
                 cx={center}
                 cy={center}
@@ -208,12 +232,10 @@ const Roullete: React.FC = () => {
           </Svg>
         </Animated.View>
 
-        {/* Indicador */}
         <View
           style={tw`absolute top-[-5] w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-red-500 z-10`}
         />
 
-        {/* Botão invisível sobre o círculo central */}
         <Pressable
           onPress={spin}
           disabled={isSpinning}
@@ -234,20 +256,12 @@ const Roullete: React.FC = () => {
           </Text>
         </Pressable>
       </View>
+      <View style={styles.subContainer}>
+        <Button title={isSpinning ? 'Girando...' : 'Girar Roleta'}
+          onPress={spin}
+          disabled={isSpinning} />
 
-      <Pressable
-        style={tw.style(
-          'px-6 py-3 rounded-lg',
-          isSpinning ? 'bg-gray-400' : 'bg-blue-600'
-        )}
-        onPress={spin}
-        disabled={isSpinning}
-      >
-        <Text style={tw`text-white text-lg font-bold`}>
-          {isSpinning ? 'Girando...' : 'Girar Roleta'}
-        </Text>
-      </Pressable>
-
+      </View>
       <Modal
         visible={modalVisible}
         transparent
@@ -255,9 +269,26 @@ const Roullete: React.FC = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={tw`flex-1 justify-center items-center bg-black/60`}>
-          <View style={tw`bg-white p-8 rounded-2xl items-center`}>
-            <Text style={tw`text-2xl font-bold mb-4`}>🎉 Parabéns!</Text>
-            <Text style={tw`text-lg mb-6`}>Você ganhou: {result?.name}</Text>
+          {/* Confetes acima de tudo no modal */}
+          {showConfetti && (
+            <ConfettiCannon
+              count={80}
+              origin={{ x: width / 2, y: -10 }}
+              fadeOut
+              fallSpeed={3000}
+              explosionSpeed={0}
+              onAnimationEnd={() => setShowConfetti(false)}
+            />
+          )}
+
+          <View style={tw`bg-white p-8 rounded-2xl items-center z-10`}>
+            <Text style={tw`text-2xl font-bold mb-4`}>
+              {result?.isPrize === true ? "🎉 Parabéns!" : "Que Pena "}
+            </Text>
+            <Text style={tw`text-lg mb-6`}>
+              {result?.isPrize === true ? "Você ganhou: " : "Que pena "}
+              {result?.name}
+            </Text>
 
             <Pressable
               style={tw`bg-green-600 px-6 py-2 rounded-lg`}
@@ -271,6 +302,8 @@ const Roullete: React.FC = () => {
           </View>
         </View>
       </Modal>
+
+
     </View>
   );
 };

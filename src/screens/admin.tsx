@@ -1,21 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Pressable, FlatList } from 'react-native';
+import { View, Text, TextInput, Pressable, FlatList, Alert } from 'react-native';
 import tw from 'twrnc';
 import { store, PRIZES_TABLE } from '../config/store';
+
+import { CircleDashed, CircleCheck } from "lucide-react-native";
+
+
+
 
 // 🎯 Interface para o prêmio
 interface Prize {
   name: string;
   color: string;
   probability: number;
+  quant: number
+  isPrize: boolean
 }
 
 const Admin = () => {
   const [name, setName] = useState('');
   const [color, setColor] = useState('#f94144');
   const [probability, setProbability] = useState('20');
+  const [quant, setQuant] = useState(0)
+  const [isPrize, setIsPrize] = useState(true)
 
   const [prizes, setPrizes] = useState<[string, Prize][]>([]);
+
+
+    function confirmPrize() {
+    if (isPrize === true) {
+      setIsPrize(false)
+      console.log("Desconfirma")
+      return
+    } else {
+      setIsPrize(true)
+      console.log("Confirma")
+    }
+  }
 
   // 🚀 Carrega os prêmios e escuta alterações
   useEffect(() => {
@@ -37,15 +58,23 @@ const Admin = () => {
 
   // ➕ Adiciona um prêmio novo
   const addPrize = () => {
+    if(!name || !quant || !color){
+      Alert.alert("Atenção", "Preencha os camopos corretamente")
+      return
+    }
     store.addRow(PRIZES_TABLE, {
       name,
       color,
       probability: parseInt(probability),
+      quant,
+      isPrize
     });
 
     setName('');
     setColor('#f94144');
     setProbability('20');
+    setQuant(3)
+    setIsPrize(true)
   };
 
   // ❌ Deleta um prêmio
@@ -79,6 +108,20 @@ const Admin = () => {
         onChangeText={setProbability}
         style={tw`border border-gray-300 p-2 rounded mb-4`}
       />
+        <TextInput
+        placeholder="Quantidade"
+        value={quant.toString()}
+        keyboardType="numeric"
+        onChangeText={(text) => {
+    const num = parseInt(text) || 0;
+    setQuant(num);
+  }}
+        style={tw`border border-gray-300 p-2 rounded mb-4`}
+      />
+       <View style={{ flexDirection: "row", gap: "8", marginBottom: 20, alignItems:"center" }} >
+        {isPrize === true ? (<CircleCheck size={24} color="#AAAAAA" onPress={confirmPrize} />) : (<CircleDashed size={24} color="#AAAAAA" onPress={confirmPrize} />)}
+        <Text onPress={confirmPrize}>É prêmio ?</Text>
+      </View>
 
       <Pressable
         style={tw`bg-blue-600 p-3 rounded mb-6`}
@@ -100,9 +143,10 @@ const Admin = () => {
               <View>
                 <Text style={tw`font-bold text-lg`}>{prize.name}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Cor: {prize.color}</Text>
-                <Text style={tw`text-sm text-gray-500`}>
-                  Probabilidade: {prize.probability}%
-                </Text>
+                <Text style={tw`text-sm text-gray-500`}>Probabilidade: {prize.probability}%</Text>
+                <Text style={tw`text-sm text-gray-500`}>Quantidade: {prize.quant}</Text>
+                <Text style={tw`text-sm text-gray-500`}>Prêmio: {prize.isPrize==true?"Sim":"Não"}</Text>
+                
               </View>
               <Pressable
                 onPress={() => deletePrize(id)}
