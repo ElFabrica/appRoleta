@@ -11,6 +11,7 @@ import { CircleDashed, CircleCheck } from "lucide-react-native";
 // 🎯 Interface para o prêmio
 interface Prize {
   name: string;
+  prizeReal:string
   color: string;
   probability: number;
   quant: number
@@ -19,6 +20,7 @@ interface Prize {
 
 const Admin = () => {
   const [name, setName] = useState('');
+  const [prizeReal, seprizeReal] = useState('');
   const [color, setColor] = useState('#f94144');
   const [probability, setProbability] = useState('20');
   const [quant, setQuant] = useState(0)
@@ -67,7 +69,8 @@ const Admin = () => {
       color,
       probability: parseInt(probability),
       quant,
-      isPrize
+      isPrize,
+      prizeReal
     });
 
     setName('');
@@ -95,6 +98,12 @@ const Admin = () => {
         onChangeText={setName}
         style={tw`border border-gray-300 p-2 rounded mb-2`}
       />
+        <TextInput
+        placeholder="Título do prêmio (popup)"
+        value={prizeReal}
+        onChangeText={seprizeReal}
+        style={tw`border border-gray-300 p-2 rounded mb-2`}
+      />
       <TextInput
         placeholder="Cor (hex)"
         value={color}
@@ -115,7 +124,9 @@ const Admin = () => {
         onChangeText={(text) => {
     const num = parseInt(text) || 0;
     setQuant(num);
+    
   }}
+  
         style={tw`border border-gray-300 p-2 rounded mb-4`}
       />
        <View style={{ flexDirection: "row", gap: "8", marginBottom: 20, alignItems:"center" }} >
@@ -142,6 +153,7 @@ const Admin = () => {
             <View style={tw`flex-row justify-between items-center mb-2`}>
               <View>
                 <Text style={tw`font-bold text-lg`}>{prize.name}</Text>
+                <Text style={tw`font-bold text-lg`}>{prize.prizeReal}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Cor: {prize.color}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Probabilidade: {prize.probability}%</Text>
                 <Text style={tw`text-sm text-gray-500`}>Quantidade: {prize.quant}</Text>
