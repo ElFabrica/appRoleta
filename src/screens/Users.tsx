@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, Pressable, Alert, TextInput, Modal,FlatList, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
 import { store, USERS_TABLE, initializeStore, clearTable } from "../config/store";
@@ -90,6 +90,7 @@ const Users: React.FC = () => {
   }, []);
 
   return (
+    <ScrollView scrollEnabled={true} >
     <View style={tw`flex-1 items-center mt-8 px-4`}>
       <Text style={tw`text-xl font-medium`}>Inscritos</Text>
       <View style={tw`mt-6 w-full`}>
@@ -100,23 +101,26 @@ const Users: React.FC = () => {
             <Text style={tw`text-base text-center min-w-30`}>Telefone</Text>
           </View>
         )}
-
-        {users.length > 0 ? (
-          users.map((item) => (
-            <View key={item.id} style={tw`flex-row justify-between`}>
-              <Text style={tw`text-base text-center min-w-30`}>{item.name}</Text>
-              <Text style={tw`text-base text-center min-w-30`}>{item.email}</Text>
-              <Text style={tw`text-base text-center min-w-30`}>{item.phone}</Text>
+        
+        <FlatList
+        data={users}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          const id = item;
+          return (
+            <View >
+              <View style={{flexDirection:"row", justifyContent:"space-evenly"}}>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}> {item.name}</Text>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}>{item.email}</Text>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}> {item.phone}</Text>
+                
+              </View>
             </View>
-          ))
-        ) : (
-          <Text style={tw`text-center text-base`}>
-            Nenhum dado encontrado...
-          </Text>
-        )}
-
+          );
+        }}
+      />
         {users.length > 0 && (
-          <View style={tw`flex-row justify-center gap-4 mt-4`}>
+          <View style={{flexDirection:"row", justifyContent:"space-between", marginBottom:20}}>
             <Pressable
               style={tw`bg-purple-500 p-4 rounded-md`}
               onPress={() => setUploadModalVisible(true)}
@@ -210,6 +214,7 @@ const Users: React.FC = () => {
         </View>
       </Modal>
     </View>
+    </ScrollView>
   );
 }
 

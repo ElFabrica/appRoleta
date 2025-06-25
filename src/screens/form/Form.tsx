@@ -45,15 +45,15 @@ const Form: React.FC<Props> = ({ navigation }) => {
 
     console.log(name, email, phone)
 
-    if (!name || !email || !phone) {
+    if (!name || !phone) {
       Alert.alert("Erro", "Preencha todos os dados");
       return;
     }
 
-    if (!validator.validate(email)) {
+    {/*if (!validator.validate(email)) {
       Alert.alert("Erro", "E-mail inválido");
       return;
-    }
+    } */}
 
     const id = Math.random().toString(30).substring(2, 20);
     try {
@@ -105,7 +105,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
             />
           </View>
 
-          {/* EMAIL */}
+          {/* EMAIL 
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Email</Text>
             <Input place="seu@email.com"
@@ -114,7 +114,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
               value={email}
               onChangeText={setEmail} />
           </View>
-
+*/}
           {/* TELEFONE */}
           <View style={tw`w-full mb-4`}>
             <Text style={tw`text-lg font-bold`}>Telefone</Text>
@@ -157,7 +157,7 @@ const Form: React.FC<Props> = ({ navigation }) => {
           {/* BOTÃO */}
           <View style={styles.containerButton}>
           <Button title="Começar" 
-          size={14} 
+          size={24} 
           onPress={onSubmit}
           disabled={!loaded} />
             </View>

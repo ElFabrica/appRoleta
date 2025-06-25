@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
         {/* 🚀 Botão de iniciar */}
 
-        <Button title="Iniciar" onPress={() => navigation.navigate("Form")} />
+        <Button title="Iniciar" size={24} onPress={() => navigation.navigate("Form")} />
       </View>
 
       {/* 🔒 Modal de acesso restrito */}

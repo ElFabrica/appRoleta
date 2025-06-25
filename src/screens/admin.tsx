@@ -152,7 +152,7 @@ const Admin = () => {
           const [id, prize] = item;
           return (
             <View style={tw`flex-row justify-between items-center mb-2`}>
-              <View>
+              <View style={{width:"80%"}}>
                 <Text style={tw`font-bold text-lg`}>Prêmio: {prize.name}</Text>
                 <Text style={{fontSize:14, fontWeight:500}}>Prêmio mensagem: {prize.prizeReal}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Cor: {prize.color}</Text>

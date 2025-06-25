@@ -19,10 +19,8 @@ import { store, PRIZES_TABLE, USERS_TABLE } from '../../config/store';
 import { updateRow } from '../../config/store'
 
 import { styles } from './style';
-import { Confetes } from '../../components/confetes';
 import { Button } from '../../components/buttom/Buttom';
 
-// Tipagem da navegação
 type RootStackParamList = {
   Home: undefined;
   Roullete: undefined;
@@ -30,15 +28,14 @@ type RootStackParamList = {
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
-// Interface dos prêmios
 interface Prize {
   id: string;
   name: string;
-  prizeReal:string
+  prizeReal: string;
   color: string;
   probability: number;
   quant: number;
-  isPrize: boolean
+  isPrize: boolean;
 }
 
 function Roullete() {
@@ -57,7 +54,6 @@ function Roullete() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-
   const anglePerSlice = 360 / (prizes.length || 1);
 
   useEffect(() => {
@@ -72,7 +68,7 @@ function Roullete() {
           isPrize: value.isPrize,
           prizeReal: value.prizeReal
         }))
-        .filter((prize) => prize.quant > 0); // ⚠️ Filtra prêmios esgotados
+        .filter((prize) => prize.quant > 0);
 
       setPrizes(data);
       console.log('Prêmios carregados:', data);
@@ -108,8 +104,7 @@ function Roullete() {
     const rounds = 5;
     const endRotation =
       rounds * 360 +
-      (prizes.length - winnerIndex) * anglePerSlice -
-      anglePerSlice / 2;
+      (prizes.length - winnerIndex) * anglePerSlice - anglePerSlice / 2;
 
     Animated.timing(rotation, {
       toValue: endRotation,
@@ -124,20 +119,6 @@ function Roullete() {
 
       if (prize.isPrize) {
         setShowConfetti(true);
-      }
-
-
-      store.addRow(USERS_TABLE, {
-        userId: Date.now().toString(),
-        userName: 'Usuário Teste',
-        prize: prize.name,
-        date: new Date().toISOString(),
-      });
-
-      if (prize.quant > 0) {
-        updateRow(PRIZES_TABLE, prize.id, {
-          quant: prize.quant - 1,
-        });
       }
 
       setIsSpinning(false);
@@ -155,7 +136,7 @@ function Roullete() {
     r: number,
     angleInDegrees: number
   ) => {
-    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+    const angleInRadians = ((angleInDegrees - 0) * Math.PI) / 180.0;
     return {
       x: centerX + r * Math.cos(angleInRadians),
       y: centerY + r * Math.sin(angleInRadians),
@@ -186,12 +167,9 @@ function Roullete() {
   };
 
   return (
-
     <View style={styles.Container}>
       <Image style={styles.imagem} source={require("../../assets/Logo_Paslimina.png")} />
-      <Text style={styles.Title}>
-        Girou Ganhou
-      </Text>
+      <Text style={styles.Title}>Girou Ganhou</Text>
 
       <View style={tw`justify-center items-center mb-10`}>
         <Animated.View style={{ transform: [{ rotate }] }}>
@@ -241,29 +219,30 @@ function Roullete() {
         <Pressable
           onPress={spin}
           disabled={isSpinning}
-          style={[
-            {
-              position: 'absolute',
-              width: wheelSize * 0.24,
-              height: wheelSize * 0.24,
-              borderRadius: (wheelSize * 0.24) / 2,
-              backgroundColor: 'transparent',
-              justifyContent: 'center',
-              alignItems: 'center',
-            },
-          ]}
+          style={{
+            position: 'absolute',
+            width: wheelSize * 0.24,
+            height: wheelSize * 0.24,
+            borderRadius: (wheelSize * 0.24) / 2,
+            backgroundColor: 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
           <Text style={tw`text-gray-700 font-bold p-4`}>
             {isSpinning ? '' : 'Girar'}
           </Text>
         </Pressable>
       </View>
-      <View style={styles.subContainer}>
-        <Button title={isSpinning ? 'Girando...' : 'Girar Roleta'}
-          onPress={spin}
-          disabled={isSpinning} />
 
+      <View style={styles.subContainer}>
+        <Button
+          title={isSpinning ? 'Girando...' : 'Girar Roleta'}
+          onPress={spin}
+          disabled={isSpinning}
+        />
       </View>
+
       <Modal
         visible={modalVisible}
         transparent
@@ -271,7 +250,6 @@ function Roullete() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={tw`flex-1 justify-center items-center bg-black/60`}>
-          {/* Confetes acima de tudo no modal */}
           {showConfetti && (
             <ConfettiCannon
               count={80}
@@ -285,28 +263,33 @@ function Roullete() {
 
           <View style={tw`bg-white p-8 rounded-2xl items-center z-10`}>
             <Text style={tw`text-2xl font-bold mb-4`}>
-              {result?.isPrize === true ? "🎉 Parabéns!" : "Que Pena "}
+              {result?.isPrize ? "🎉 Parabéns!" : "Que Pena"}
             </Text>
             <Text style={tw`text-lg mb-6`}>
-              {result?.isPrize === true ? `Você ganhou ${result?.prizeReal}` : `${result?.prizeReal}`}
+              {result?.isPrize ? `Você ganhou ${result?.prizeReal}` : `${result?.prizeReal}`}
             </Text>
 
             <Pressable
               style={tw`bg-green-600 px-6 py-2 rounded-lg`}
-              onPress={() => [
-                setModalVisible(false),
-                navigation.navigate('Home'),
-              ]}
+              onPress={() => {
+                setModalVisible(false);
+                if (result?.isPrize && result.quant > 0) {
+                  updateRow(PRIZES_TABLE, result.id, {
+                    quant: result.quant - 1,
+                  });
+                }
+                navigation.navigate('Home');
+              }}
             >
-              <Text style={tw`text-white font-bold`}>{result?.isPrize === true ? "Resgatar" : "Concluir"}</Text>
+              <Text style={tw`text-white font-bold`}>
+                {result?.isPrize ? "Resgatar" : "Concluir"}
+              </Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
-};
+}
 
 export default Roullete;
