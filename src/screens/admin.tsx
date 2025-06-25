@@ -20,7 +20,7 @@ interface Prize {
 
 const Admin = () => {
   const [name, setName] = useState('');
-  const [prizeReal, seprizeReal] = useState('');
+  const [prizeReal, setPrizeReal] = useState('');
   const [color, setColor] = useState('#f94144');
   const [probability, setProbability] = useState('20');
   const [quant, setQuant] = useState(0)
@@ -60,7 +60,7 @@ const Admin = () => {
 
   // ➕ Adiciona um prêmio novo
   const addPrize = () => {
-    if(!name || !quant || !color){
+    if(!name || !quant || !color || !prizeReal){
       Alert.alert("Atenção", "Preencha os camopos corretamente")
       return
     }
@@ -74,6 +74,7 @@ const Admin = () => {
     });
 
     setName('');
+    setPrizeReal('');
     setColor('#f94144');
     setProbability('20');
     setQuant(3)
@@ -101,7 +102,7 @@ const Admin = () => {
         <TextInput
         placeholder="Título do prêmio (popup)"
         value={prizeReal}
-        onChangeText={seprizeReal}
+        onChangeText={setPrizeReal}
         style={tw`border border-gray-300 p-2 rounded mb-2`}
       />
       <TextInput
@@ -152,8 +153,8 @@ const Admin = () => {
           return (
             <View style={tw`flex-row justify-between items-center mb-2`}>
               <View>
-                <Text style={tw`font-bold text-lg`}>{prize.name}</Text>
-                <Text style={tw`font-bold text-lg`}>{prize.prizeReal}</Text>
+                <Text style={tw`font-bold text-lg`}>Prêmio: {prize.name}</Text>
+                <Text style={{fontSize:14, fontWeight:500}}>Prêmio mensagem: {prize.prizeReal}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Cor: {prize.color}</Text>
                 <Text style={tw`text-sm text-gray-500`}>Probabilidade: {prize.probability}%</Text>
                 <Text style={tw`text-sm text-gray-500`}>Quantidade: {prize.quant}</Text>

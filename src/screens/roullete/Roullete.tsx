@@ -34,6 +34,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 interface Prize {
   id: string;
   name: string;
+  prizeReal:string
   color: string;
   probability: number;
   quant: number;
@@ -68,7 +69,8 @@ function Roullete() {
           color: value.color,
           probability: value.probability ?? 1,
           quant: value.quant,
-          isPrize: value.isPrize
+          isPrize: value.isPrize,
+          prizeReal: value.prizeReal
         }))
         .filter((prize) => prize.quant > 0); // ⚠️ Filtra prêmios esgotados
 
@@ -286,8 +288,7 @@ function Roullete() {
               {result?.isPrize === true ? "🎉 Parabéns!" : "Que Pena "}
             </Text>
             <Text style={tw`text-lg mb-6`}>
-              {result?.isPrize === true ? "Você ganhou: " : "Que pena "}
-              {result?.name}
+              {result?.isPrize === true ? `Você ganhou ${result?.prizeReal}` : `${result?.prizeReal}`}
             </Text>
 
             <Pressable
@@ -297,7 +298,7 @@ function Roullete() {
                 navigation.navigate('Home'),
               ]}
             >
-              <Text style={tw`text-white font-bold`}>Resgatar Prêmio</Text>
+              <Text style={tw`text-white font-bold`}>{result?.isPrize === true ? "Resgatar" : "Concluir"}</Text>
             </Pressable>
           </View>
         </View>
