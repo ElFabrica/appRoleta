@@ -10,13 +10,13 @@ export const styles = StyleSheet.create({
         fontWeight: 600,
         borderWidth: 1,
         borderRadius: 20,
-        borderColor:"##D88200",
+        borderColor:"#D88200",
         padding: 10,
         width: "100%",
         height: 55,
 
     },
     inputFocused: {
-    borderColor: "##A26201"
+    borderColor: "#A26201"
     }
 })
