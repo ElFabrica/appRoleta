@@ -2,15 +2,16 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack"; // Não precisa de NativeStackScreenProps aqui
-import Home from "../screens/Home";
-import Form from "../screens/Form";
+import Home from "../screens/home/Home";
+import Form from "../screens/form/Form";
 import Users from "../screens/Users";
-import Roullete from "../screens/Roullete";
+
 import AdminScreen from "../screens/admin"; // Renomeie o import se o nome do arquivo for 'admin.tsx' para evitar confusão com a rota 'admin'
   // Por exemplo, AdminScreen se o arquivo for admin.tsx
   // Se o arquivo for Admin.tsx (com 'A' maiúsculo), então 'Admin' está ok.
 import { Provider as TinybaseProvider } from "tinybase/ui-react";
 import { store as globalAppStore } from '../config/store'; // <--- IMPORTE SUA STORE GLOBAL
+import Roullete from "../screens/roullete/Roullete";
 
 // Defina os nomes das rotas e seus parâmetros
 export type RootStackParamList = {

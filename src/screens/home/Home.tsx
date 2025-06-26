@@ -1,10 +1,14 @@
-import { View, Text, Pressable, Modal, TextInput, Alert } from "react-native";
+import { View, Text, Pressable, Modal, TextInput, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import tw from 'twrnc';
 import LottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { Button } from "../../components/buttom/Buttom";
+
+import { styles } from "./style";
 
 // 🔗 Tipagem das rotas
 type RootStackParamList = {
@@ -44,17 +48,17 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={tw`flex-1`}>
-
+    <View style={styles.container}>
+      
       {/* ⚙️ Ícone de configurações com dropdown */}
-      <View style={tw`mt-4 mx-2`}>
+      <View style={[styles.subContainer, {marginTop: 16, marginLeft: 16}]}>
         <Pressable onPress={() => setDropdownVisible(!dropdownVisible)}>
           <Icon name="gear" size={24} color="purple" />
         </Pressable>
 
         {/* 🔽 Dropdown */}
         {dropdownVisible && (
-          <View style={tw`absolute bg-white shadow-lg rounded-md p-2 top-8 right-0 z-50`}>
+          <View style={tw`absolute bg-white shadow-lg rounded-md p-2 top-8 left-0 z-50`}>
             <Pressable
               onPress={() => {
                 setDropdownVisible(false);
@@ -73,39 +77,36 @@ export default function HomeScreen() {
           </View>
         )}
       </View>
+      <Image style={styles.imagem} source={require("../../assets/Logo_Paslimina.png")}/>
 
       {/* 🎯 Conteúdo principal */}
-      <View style={tw`flex-1 justify-center items-center`}>
-        <Text style={tw`text-blue-500 font-medium text-5xl mb-5 leading-10 text-center`}>
+      <View style={tw` items-center`}>
+        <Text style={styles.Title}>
           Bem-vindo ao{"\n"}Girou Ganhou!
         </Text>
 
         {/* 🎥 Animação */}
         <LottieView
-          source={require('../animations/Roullete.json')}
+          source={require('../../animations/Roullete.json')}
           autoPlay
           loop
           style={tw`w-5/6 h-1/3`}
         />
 
-        <Text style={tw`text-blue-500 font-bold text-3xl text-center mb-5`}>
+        <Text style={[styles.subTitile, {marginBottom:16}]}>
           Instruções
         </Text>
 
         {/* ℹ️ Bloco de instruções */}
-        <View style={tw`bg-blue-800 p-4 rounded-lg w-95 items-center justify-center`}>
-          <Text style={tw`text-white text-2xl text-center`}>Concorra a brindes.</Text>
-          <Text style={tw`text-white text-2xl text-center`}>Preencha um formulário rápido.</Text>
-          <Text style={tw`text-white text-2xl text-center`}>Cada cadastro tem direito a um giro.</Text>
+        <View style={[styles.containerInstructions, {marginBottom:20}]}>
+          <Text style={styles.textInstructions}>Concorra a brindes.</Text>
+          <Text style={styles.textInstructions}>Preencha um formulário rápido.</Text>
+          <Text style={styles.textInstructions}>Cada cadastro tem direito a um giro.</Text>
         </View>
 
         {/* 🚀 Botão de iniciar */}
-        <Pressable
-          style={tw`bg-blue-800 mt-10 px-10 py-3 rounded`}
-          onPress={() => navigation.navigate("Form")}
-        >
-          <Text style={tw`text-white font-bold text-3xl`}>Iniciar</Text>
-        </Pressable>
+
+        <Button title="Iniciar" size={20} onPress={() => navigation.navigate("Form")} />
       </View>
 
       {/* 🔒 Modal de acesso restrito */}

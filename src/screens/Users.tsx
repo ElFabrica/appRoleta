@@ -1,7 +1,8 @@
-import { View, Text, Pressable, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, Pressable, Alert, TextInput, Modal,FlatList, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
 import { store, USERS_TABLE, initializeStore, clearTable } from "../config/store";
+import { Input } from '../components/input/Input';
 
 
 interface User {
@@ -9,6 +10,7 @@ interface User {
   name: string;
   email: string;
   phone: string;
+  nota:string
 }
 
 const Users: React.FC = () => {
@@ -16,6 +18,7 @@ const Users: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
+  const [nota, setNota] = useState("")
 
   const CORRECT_KEY = "Fala1234@";
 
@@ -61,6 +64,7 @@ const Users: React.FC = () => {
       await UpdateItems(item);
     }
     Alert.alert("Dados enviados com sucesso!");
+    setNota("")
   };
 
   const get = (): void => {
@@ -71,6 +75,7 @@ const Users: React.FC = () => {
       email: String(user.email),
       phone: String(user.phone),
       game: String("Roleta"),
+      nota: String(nota)
     }));
     setUsers(response);
     // console.log('📦 Dados atuais:', data); //Mostrar dados no console
@@ -87,9 +92,10 @@ const Users: React.FC = () => {
       }
     };
     loadData();
-  }, []);
+  }, [nota]);
 
   return (
+    <ScrollView scrollEnabled={true} >
     <View style={tw`flex-1 items-center mt-8 px-4`}>
       <Text style={tw`text-xl font-medium`}>Inscritos</Text>
       <View style={tw`mt-6 w-full`}>
@@ -100,23 +106,26 @@ const Users: React.FC = () => {
             <Text style={tw`text-base text-center min-w-30`}>Telefone</Text>
           </View>
         )}
-
-        {users.length > 0 ? (
-          users.map((item) => (
-            <View key={item.id} style={tw`flex-row justify-between`}>
-              <Text style={tw`text-base text-center min-w-30`}>{item.name}</Text>
-              <Text style={tw`text-base text-center min-w-30`}>{item.email}</Text>
-              <Text style={tw`text-base text-center min-w-30`}>{item.phone}</Text>
+        
+        <FlatList
+        data={users}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => {
+          const id = item;
+          return (
+            <View >
+              <View style={{flexDirection:"row", justifyContent:"space-evenly"}}>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}> {item.name}</Text>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}>{item.email}</Text>
+                <Text style={{fontSize:12, fontWeight:500, color:"#333333"}}> {item.phone}</Text>
+                
+              </View>
             </View>
-          ))
-        ) : (
-          <Text style={tw`text-center text-base`}>
-            Nenhum dado encontrado...
-          </Text>
-        )}
-
+          );
+        }}
+      />
         {users.length > 0 && (
-          <View style={tw`flex-row justify-center gap-4 mt-4`}>
+          <View style={{flexDirection:"row", justifyContent:"space-between", marginBottom:20}}>
             <Pressable
               style={tw`bg-purple-500 p-4 rounded-md`}
               onPress={() => setUploadModalVisible(true)}
@@ -182,13 +191,19 @@ const Users: React.FC = () => {
         onRequestClose={() => setUploadModalVisible(false)}
       >
         <View style={tw`flex-1 justify-center items-center bg-black/50`}>
-          <View style={tw`bg-white p-6 rounded-lg w-80`}>
+          <View style={{backgroundColor:"#FFFFFF", borderRadius:16, padding:24, gap:8, width:350}}>
             <Text style={tw`text-lg font-bold mb-4`}>
+              
               Deseja realmente enviar os dados?
             </Text>
             <Text style={tw`mb-4`}>
               Isso irá enviar todos os inscritos para o servidor.
             </Text>
+            <Input place='Digite uma nota'
+              value={nota}
+              onChangeText={(value)=> setNota(value)
+              }
+              />
             <View style={tw`flex-row justify-between`}>
               <Pressable
                 style={tw`bg-gray-400 px-4 py-2 rounded-md`}
@@ -210,6 +225,7 @@ const Users: React.FC = () => {
         </View>
       </Modal>
     </View>
+    </ScrollView>
   );
 }
 

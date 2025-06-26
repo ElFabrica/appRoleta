@@ -74,6 +74,16 @@ const clearTable = async (tableName: string) => {
   console.log(`Tabela ${tableName} limpa. Autosave deve persistir.`);
   // Não é necessário `await persister.load();` aqui, pois o estado em memória é a fonte da verdade.
 };
+// Método auxiliar para atualizar uma linha existente
+const updateRow = (tableName: string, rowId: string, newData: any) => {
+  const currentRow = store.getRow(tableName, rowId);
+  if (!currentRow) {
+    console.warn(`Linha com ID ${rowId} não encontrada na tabela ${tableName}`);
+    return;
+  }
+  store.setRow(tableName, rowId, { ...currentRow, ...newData });
+};
+
 
 export {
   store,
@@ -82,5 +92,6 @@ export {
   initializeStore,
   persister, // Exporte se precisar acessar diretamente, mas geralmente não é necessário fora daqui
   clearTable,
-  isStoreInitialized // Pode ser útil para verificar em outros lugares
+  isStoreInitialized, // Pode ser útil para verificar em outros lugares
+  updateRow
 };
